@@ -1,0 +1,24 @@
+{
+  "name": "@social-network/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun --env-file=../../.env --watch src/index.ts",
+    "start": "bun --env-file=../../.env src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "db:check": "bun --env-file=../../.env src/db/check-connection.ts",
+    "db:generate": "bun --env-file=../../.env ./node_modules/drizzle-kit/bin.cjs generate --config=drizzle.config.ts",
+    "db:migrate": "bun --env-file=../../.env ./node_modules/drizzle-kit/bin.cjs migrate --config=drizzle.config.ts",
+    "db:studio": "bun --env-file=../../.env ./node_modules/drizzle-kit/bin.cjs studio --config=drizzle.config.ts"
+  },
+  "dependencies": {
+    "drizzle-orm": "^1.0.0-rc.4",
+    "elysia": "^1.4.30",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^1.0.0-rc.4"
+  }
+}
