@@ -1,6 +1,7 @@
 export type ApiErrorCode =
   | "BAD_REQUEST"
   | "VALIDATION_ERROR"
+  | "CONFLICT"
   | "NOT_FOUND"
   | "INTERNAL_SERVER_ERROR";
 

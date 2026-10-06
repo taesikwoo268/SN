@@ -7,7 +7,7 @@
     "dev": "bun --env-file=../../.env --watch src/index.ts",
     "start": "bun --env-file=../../.env src/index.ts",
     "typecheck": "tsc --noEmit",
-    "test": "bun test",
+    "test": "bun --env-file=../../.env test",
     "db:check": "bun --env-file=../../.env src/db/check-connection.ts",
     "db:generate": "bun --env-file=../../.env ./node_modules/drizzle-kit/bin.cjs generate --config=drizzle.config.ts",
     "db:migrate": "bun --env-file=../../.env ./node_modules/drizzle-kit/bin.cjs migrate --config=drizzle.config.ts",

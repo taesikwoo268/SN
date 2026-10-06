@@ -2,6 +2,7 @@ import { Elysia } from "elysia";
 
 import { healthRoutes } from "./modules/health/health.routes.ts";
 import { createApiError } from "./shared/http/api-error.ts";
+import { authRoutes } from "./modules/auth/auth.routes.ts";
 
 export const app = new Elysia({
   name: "social-network.api",
@@ -47,6 +48,7 @@ export const app = new Elysia({
       }
     }
   })
-  .use(healthRoutes);
+  .use(healthRoutes)
+  .use(authRoutes);
 
 export type App = typeof app;
