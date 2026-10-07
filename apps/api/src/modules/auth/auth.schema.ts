@@ -34,12 +34,48 @@ export const RegisterBodySchema = z
   })
   .strict();
 
+export const LoginBodySchema = z
+.object({
+    email: z
+      .string()
+      .trim()
+      .toLowerCase()
+      .email()
+      .max(320),
+
+    password: z
+      .string()
+      .min(1)
+      .max(128),
+})
+.strict();
+
+export const SessionCookieSchema = z.object({
+  session: z.string().optional(),
+});
+
+export const AuthenticatedUserSchema = z.object({
+  id: z.string().uuid(),
+  username: z.string(),
+  displayName: z.string(),
+});
+
+export const LoginResponseSchema = z.object({
+  data: z.object({
+    user: AuthenticatedUserSchema,
+  }),
+});
+
 export type RegisterBodyInput = z.input<
   typeof RegisterBodySchema
 >;
 
 export type RegisterData = z.output<
   typeof RegisterBodySchema
+>;
+
+export type LoginData = z.output<
+  typeof LoginBodySchema
 >;
 
 export const RegisteredUserSchema = z.object({

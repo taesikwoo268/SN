@@ -3,10 +3,16 @@ import { Elysia } from "elysia";
 import { healthRoutes } from "./modules/health/health.routes.ts";
 import { createApiError } from "./shared/http/api-error.ts";
 import { authRoutes } from "./modules/auth/auth.routes.ts";
+import { sessionRoutes } from "./modules/auth/session.routes.ts";
+import { createCorsPlugin } from "./shared/http/cors.ts";
+import {
+  userRoutes,
+} from "./modules/users/user.routes.ts";
 
 export const app = new Elysia({
   name: "social-network.api",
 })
+  .use(createCorsPlugin())
   .onError(({ code, error, set }) => {
     switch (code) {
       case "VALIDATION": {
@@ -49,6 +55,8 @@ export const app = new Elysia({
     }
   })
   .use(healthRoutes)
-  .use(authRoutes);
+  .use(authRoutes)
+  .use(sessionRoutes)
+  .use(userRoutes);
 
 export type App = typeof app;

@@ -1,18 +1,47 @@
 import { SQL } from "bun";
-import { DrizzleQueryError } from "drizzle-orm";
+import {
+    DrizzleQueryError,
+    and,
+    eq,
+    gt,
+} from "drizzle-orm";
 
 import { db } from "../../db/client.ts";
 import {
     passwordCredentials,
+    sessions,
     users,
 } from "../../db/schema/index.ts";
 import { RegistrationConflictError } from "./auth.errors.ts";
 
+// RECORD
 export interface CreateAccountRecord {
     email: string;
     username: string;
     displayName: string;
     passwordHash: string;
+}
+
+export interface LoginRecord {
+    userId: string;
+    username: string;
+    displayName: string;
+    passwordHash: string;
+}
+
+export interface CreateSessionRecord {
+    userId: string;
+    tokenHash: string;
+    expiresAt: Date;
+    userAgent: string | null;
+}
+
+export interface ActiveSessionRecord {
+    sessionId: string;
+    userId: string;
+    username: string;
+    displayName: string;
+    expiresAt: Date;
 }
 
 export async function createAccount(
@@ -69,6 +98,91 @@ export async function createAccount(
         }
         throw error;
     }
+}
+
+export async function findLoginRecordByEmail(
+    email: string,
+): Promise<LoginRecord | null> {
+    const [record] = await db
+        .select({
+            userId: users.id,
+            username: users.username,
+            displayName: users.displayName,
+            passwordHash:
+                passwordCredentials.passwordHash,
+        })
+        .from(passwordCredentials)
+        .innerJoin(
+            users,
+            eq(passwordCredentials.userId, users.id),
+        )
+        .where(
+            eq(passwordCredentials.email, email),
+        )
+        .limit(1);
+
+    return record ?? null;
+}
+
+export async function insertSession(
+    input: CreateSessionRecord,
+) {
+    const [session] = await db
+        .insert(sessions)
+        .values({
+            userId: input.userId,
+            tokenHash: input.tokenHash,
+            expiresAt: input.expiresAt,
+            userAgent: input.userAgent,
+        })
+        .returning({
+            id: sessions.id,
+            expiresAt: sessions.expiresAt,
+        });
+
+    if (!session) {
+        throw new Error(
+            "Session insert returned no data",
+        );
+    }
+
+    return session;
+}
+
+export async function findActiveSessionByTokenHash(
+    tokenHash: string,
+    now: Date,
+): Promise<ActiveSessionRecord | null> {
+    const [record] = await db
+        .select({
+            sessionId: sessions.id,
+            userId: users.id,
+            username: users.username,
+            displayName: users.displayName,
+            expiresAt: sessions.expiresAt,
+        })
+        .from(sessions)
+        .innerJoin(
+            users,
+            eq(sessions.userId, users.id),
+        )
+        .where(
+            and(
+                eq(sessions.tokenHash, tokenHash),
+                gt(sessions.expiresAt, now),
+            ),
+        )
+        .limit(1);
+
+    return record ?? null;
+}
+
+export async function deleteSessionById(
+    sessionId: string,
+): Promise<void> {
+    await db
+        .delete(sessions)
+        .where(eq(sessions.id, sessionId));
 }
 
 function getPostgresError(
