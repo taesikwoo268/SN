@@ -10,6 +10,7 @@ import { accountProfileRoutes } from "./modules/users/profile/account-profile.ro
 import { publicProfileRoutes } from "./modules/users/profile/public-profile.routes.ts";
 import { userSearchRoutes } from "./modules/users/search/user-search.routes.ts";
 import { createOpenApiPlugin } from "./shared/http/openapi.ts";
+import { mediaRoutes } from "./modules/media/media.routes.ts";
 
 export const app = new Elysia({
   name: "social-network.api",
@@ -63,6 +64,7 @@ export const app = new Elysia({
   .use(userSearchRoutes)
   .use(publicProfileRoutes)
   .use(accountProfileRoutes)
-  .use(avatarRoutes);
+  .use(avatarRoutes)
+  .use(mediaRoutes);
 
 export type App = typeof app;

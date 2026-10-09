@@ -98,3 +98,20 @@ export async function deleteLocalMedia(
 
   await Bun.file(path).delete();
 }
+
+export async function findLocalMedia(
+  key: string,
+): Promise<Blob | null> {
+  try {
+    const path = resolveMediaPath(key);
+    const file = Bun.file(path);
+
+    if (!(await file.exists())) {
+      return null;
+    }
+
+    return file;
+  } catch {
+    return null;
+  }
+}

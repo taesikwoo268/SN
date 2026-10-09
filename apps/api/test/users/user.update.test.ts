@@ -5,8 +5,8 @@ import {
   mock,
 } from "bun:test";
 import { Elysia } from "elysia";
-import { env } from "../../src/config/env.ts";
 
+import { env } from "../../src/config/env.ts";
 import {
   createAccountProfileRoutes,
 } from "../../src/modules/users/profile/account-profile.routes.ts";
@@ -24,12 +24,14 @@ import type {
 const userId =
   "550e8400-e29b-41d4-a716-446655440000";
 
-const session = {
+const currentSession = {
   sessionId:
     "660e8400-e29b-41d4-a716-446655440000",
+
   expiresAt: new Date(
     "2026-11-01T00:00:00.000Z",
   ),
+
   user: {
     id: userId,
     username: "alice_123",
@@ -45,7 +47,9 @@ function createUpdateRequest(
   } = {},
 ): Request {
   const headers = new Headers({
-    "content-type": "application/json",
+    "content-type":
+      "application/json",
+
     origin:
       options.origin ??
       env.FRONTEND_ORIGIN,
@@ -72,7 +76,8 @@ describe("PATCH /users/me", () => {
   it("updates the authenticated user's profile", async () => {
     const resolveCurrentSessionMock:
       typeof resolveCurrentSession = mock(
-        async (_token: string) => session,
+        async (_token: string) =>
+          currentSession,
       );
 
     const updateUserProfileMock:
@@ -95,6 +100,11 @@ describe("PATCH /users/me", () => {
             username: "alice_123",
             displayName: "Alice Tran",
             bio: null,
+
+            // Repository record dùng key,
+            // presenter sẽ chuyển thành URL.
+            avatarKey: null,
+
             createdAt: new Date(
               "2026-10-01T00:00:00.000Z",
             ),
@@ -106,6 +116,7 @@ describe("PATCH /users/me", () => {
       createAccountProfileRoutes({
         resolveCurrentSession:
           resolveCurrentSessionMock,
+
         updateUserProfile:
           updateUserProfileMock,
       }),
@@ -114,11 +125,13 @@ describe("PATCH /users/me", () => {
     const response = await app.handle(
       createUpdateRequest(
         {
-          displayName: "  Alice Tran  ",
+          displayName:
+            "  Alice Tran  ",
           bio: "   ",
         },
         {
-          token: "valid-session-token",
+          token:
+            "valid-session-token",
         },
       ),
     );
@@ -135,6 +148,10 @@ describe("PATCH /users/me", () => {
       username: "alice_123",
       displayName: "Alice Tran",
       bio: null,
+
+      // avatarKey không có nên URL là null.
+      avatarUrl: null,
+
       createdAt:
         "2026-10-01T00:00:00.000Z",
     });
@@ -142,6 +159,16 @@ describe("PATCH /users/me", () => {
     expect(
       updateUserProfileMock,
     ).toHaveBeenCalledTimes(1);
+
+    expect(
+      updateUserProfileMock,
+    ).toHaveBeenCalledWith(
+      userId,
+      {
+        displayName: "Alice Tran",
+        bio: null,
+      },
+    );
 
     expect(
       response.headers.get(
@@ -153,7 +180,8 @@ describe("PATCH /users/me", () => {
   it("returns 401 without a session cookie", async () => {
     const resolveCurrentSessionMock:
       typeof resolveCurrentSession = mock(
-        async (_token: string) => session,
+        async (_token: string) =>
+          currentSession,
       );
 
     const updateUserProfileMock:
@@ -172,6 +200,7 @@ describe("PATCH /users/me", () => {
       createAccountProfileRoutes({
         resolveCurrentSession:
           resolveCurrentSessionMock,
+
         updateUserProfile:
           updateUserProfileMock,
       }),
@@ -186,6 +215,10 @@ describe("PATCH /users/me", () => {
     expect(response.status).toBe(401);
 
     expect(
+      resolveCurrentSessionMock,
+    ).not.toHaveBeenCalled();
+
+    expect(
       updateUserProfileMock,
     ).not.toHaveBeenCalled();
   });
@@ -193,7 +226,8 @@ describe("PATCH /users/me", () => {
   it("returns 422 for an empty body", async () => {
     const resolveCurrentSessionMock:
       typeof resolveCurrentSession = mock(
-        async (_token: string) => session,
+        async (_token: string) =>
+          currentSession,
       );
 
     const updateUserProfileMock:
@@ -215,7 +249,8 @@ describe("PATCH /users/me", () => {
 
           return {
             error: {
-              code: "VALIDATION_ERROR",
+              code:
+                "VALIDATION_ERROR",
               message:
                 "Request validation failed",
             },
@@ -226,6 +261,7 @@ describe("PATCH /users/me", () => {
         createAccountProfileRoutes({
           resolveCurrentSession:
             resolveCurrentSessionMock,
+
           updateUserProfile:
             updateUserProfileMock,
         }),
@@ -235,7 +271,8 @@ describe("PATCH /users/me", () => {
       createUpdateRequest(
         {},
         {
-          token: "valid-session-token",
+          token:
+            "valid-session-token",
         },
       ),
     );
@@ -250,7 +287,8 @@ describe("PATCH /users/me", () => {
   it("returns 403 for an untrusted origin", async () => {
     const resolveCurrentSessionMock:
       typeof resolveCurrentSession = mock(
-        async (_token: string) => session,
+        async (_token: string) =>
+          currentSession,
       );
 
     const updateUserProfileMock:
@@ -269,6 +307,7 @@ describe("PATCH /users/me", () => {
       createAccountProfileRoutes({
         resolveCurrentSession:
           resolveCurrentSessionMock,
+
         updateUserProfile:
           updateUserProfileMock,
       }),
@@ -280,7 +319,9 @@ describe("PATCH /users/me", () => {
           displayName: "Hacked",
         },
         {
-          token: "valid-session-token",
+          token:
+            "valid-session-token",
+
           origin:
             "https://evil.example",
         },

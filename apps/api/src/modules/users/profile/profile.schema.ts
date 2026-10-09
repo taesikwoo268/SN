@@ -9,6 +9,7 @@ export const PublicUserProfileSchema = z.object({
   username: z.string(),
   displayName: z.string(),
   bio: z.string().nullable(),
+  avatarUrl: z.string().url().nullable(),
   createdAt: z.string().datetime(),
 });
 

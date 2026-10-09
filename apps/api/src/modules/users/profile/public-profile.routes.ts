@@ -6,6 +6,9 @@ import {
   UserProfileResponseSchema,
 } from "./profile.schema.ts";
 import { getPublicUserProfile } from "./profile.service.ts";
+import {
+  presentPublicUserProfile,
+} from "./profile.presenter.ts";
 
 export interface PublicProfileRouteDependencies {
   getPublicUserProfile: typeof getPublicUserProfile;
@@ -28,13 +31,10 @@ export function createPublicProfileRoutes(
 
         return UserProfileResponseSchema.parse({
           data: {
-            user: {
-              id: profile.id,
-              username: profile.username,
-              displayName: profile.displayName,
-              bio: profile.bio,
-              createdAt: profile.createdAt.toISOString(),
-            },
+            user:
+              presentPublicUserProfile(
+                profile,
+              ),
           },
         });
       },

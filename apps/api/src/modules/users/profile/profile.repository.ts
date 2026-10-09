@@ -8,6 +8,7 @@ export interface PublicUserProfileRecord {
   username: string;
   displayName: string;
   bio: string | null;
+  avatarKey: string | null;
   createdAt: Date;
 }
 
@@ -21,6 +22,7 @@ const publicProfileSelection = {
   username: users.username,
   displayName: users.displayName,
   bio: users.bio,
+  avatarKey: users.avatarKey,
   createdAt: users.createdAt,
 };
 
