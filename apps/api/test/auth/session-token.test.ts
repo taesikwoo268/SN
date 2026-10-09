@@ -3,7 +3,7 @@ import { describe, expect, it } from "bun:test";
 import {
   generateSessionToken,
   hashSessionToken,
-} from "../../src/modules/auth/session-token.ts";
+} from "../../src/modules/auth/session/session-token.ts";
 
 describe("session token utilities", () => {
   it("generates unique URL-safe tokens", () => {

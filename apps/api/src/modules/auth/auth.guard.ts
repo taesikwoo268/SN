@@ -3,10 +3,10 @@ import { Elysia } from "elysia";
 import { createApiError } from "../../shared/http/api-error.ts";
 import {
   clearSessionCookie,
-} from "./session-cookie.ts";
+} from "./session/session-cookie.ts";
 import {
   resolveCurrentSession,
-} from "./auth.service.ts";
+} from "./session/session.service.ts";
 
 export interface AuthGuardDependencies {
   resolveCurrentSession:

@@ -12,13 +12,17 @@ import {
 } from "../../src/shared/http/api-error.ts";
 import { createAuthRoutes } from "../../src/modules/auth/auth.routes.ts";
 import {
-  LoginResponseSchema,
+  AuthenticatedUserResponseSchema,
+} from "../../src/modules/auth/authenticated-user.schema.ts";
+import {
   type LoginData,
-} from "../../src/modules/auth/auth.schema.ts";
+} from "../../src/modules/auth/login/login.schema.ts";
 import type {
   authenticateUser,
+} from "../../src/modules/auth/login/login.service.ts";
+import type {
   createUserSession,
-} from "../../src/modules/auth/auth.service.ts";
+} from "../../src/modules/auth/session/session.service.ts";
 
 const ApiErrorResponseSchema = z.object({
   error: z.object({
@@ -89,7 +93,7 @@ describe("POST /auth/login", () => {
 
     expect(response.status).toBe(200);
 
-    const payload = LoginResponseSchema.parse(
+    const payload = AuthenticatedUserResponseSchema.parse(
       await response.json(),
     );
 

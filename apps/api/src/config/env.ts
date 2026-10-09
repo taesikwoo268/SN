@@ -28,6 +28,17 @@ const EnvironmentSchema = z.object({
   .transform(
     (value) => new URL(value).origin,
   )
+  .default("http://localhost:3000"),
+  MEDIA_ROOT: z
+  .string()
+  .min(1)
+  .default("./storage"),
+  API_ORIGIN: z
+  .string()
+  .url()
+  .transform(
+    (value) => new URL(value).origin,
+  )
   .default("http://localhost:3100"),
 });
 
@@ -41,4 +52,6 @@ export const env: Environment = EnvironmentSchema.parse({
   DATABASE_URL: Bun.env.DATABASE_URL,
   SESSION_TTL_SECONDS: Bun.env.SESSION_TTL_SECONDS,
   FRONTEND_ORIGIN: Bun.env.FRONTEND_ORIGIN,
+  MEDIA_ROOT: Bun.env.MEDIA_ROOT,
+  API_ORIGIN: Bun.env.API_ORIGIN,
 });

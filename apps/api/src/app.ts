@@ -3,16 +3,19 @@ import { Elysia } from "elysia";
 import { healthRoutes } from "./modules/health/health.routes.ts";
 import { createApiError } from "./shared/http/api-error.ts";
 import { authRoutes } from "./modules/auth/auth.routes.ts";
-import { sessionRoutes } from "./modules/auth/session.routes.ts";
+import { sessionRoutes } from "./modules/auth/session/session.routes.ts";
 import { createCorsPlugin } from "./shared/http/cors.ts";
-import {
-  userRoutes,
-} from "./modules/users/user.routes.ts";
+import { avatarRoutes } from "./modules/users/avatar/avatar.routes.ts";
+import { accountProfileRoutes } from "./modules/users/profile/account-profile.routes.ts";
+import { publicProfileRoutes } from "./modules/users/profile/public-profile.routes.ts";
+import { userSearchRoutes } from "./modules/users/search/user-search.routes.ts";
+import { createOpenApiPlugin } from "./shared/http/openapi.ts";
 
 export const app = new Elysia({
   name: "social-network.api",
 })
   .use(createCorsPlugin())
+  .use(createOpenApiPlugin())
   .onError(({ code, error, set }) => {
     switch (code) {
       case "VALIDATION": {
@@ -57,6 +60,9 @@ export const app = new Elysia({
   .use(healthRoutes)
   .use(authRoutes)
   .use(sessionRoutes)
-  .use(userRoutes);
+  .use(userSearchRoutes)
+  .use(publicProfileRoutes)
+  .use(accountProfileRoutes)
+  .use(avatarRoutes);
 
 export type App = typeof app;

@@ -7,11 +7,11 @@ import {
 import { Elysia } from "elysia";
 import { z } from "zod";
 
-import { createSessionRoutes } from "../../src/modules/auth/session.routes.ts";
+import { createSessionRoutes } from "../../src/modules/auth/session/session.routes.ts";
 import type {
   resolveCurrentSession,
   revokeSession,
-} from "../../src/modules/auth/auth.service.ts";
+} from "../../src/modules/auth/session/session.service.ts";
 
 const ApiErrorResponseSchema = z.object({
   error: z.object({
@@ -57,7 +57,7 @@ function createSessionRequest(
   ) {
     headers.set(
       "origin",
-      "http://localhost:3100",
+      "http://localhost:3000",
     );
   }
 

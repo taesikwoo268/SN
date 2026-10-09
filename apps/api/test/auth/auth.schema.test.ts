@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'bun:test';
 
-import {RegisterBodySchema} from '../../src/modules/auth/auth.schema.ts';
+import {RegisterBodySchema} from '../../src/modules/auth/register/register.schema.ts';
 
 describe('RegisterBodySchema', () => {
   it('should validate a valid registration body', () => {

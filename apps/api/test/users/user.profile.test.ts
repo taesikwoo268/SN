@@ -7,8 +7,8 @@ import {
 import { Elysia } from "elysia";
 import { z } from "zod";
 
-import { createUserRoutes } from "../../src/modules/users/user.routes.ts";
-import type { getPublicUserProfile } from "../../src/modules/users/user.service.ts";
+import { createPublicProfileRoutes } from "../../src/modules/users/profile/public-profile.routes.ts";
+import type { getPublicUserProfile } from "../../src/modules/users/profile/profile.service.ts";
 
 const UserProfileResponseSchema = z.object({
   data: z.object({
@@ -59,7 +59,7 @@ describe("public user profile routes", () => {
       );
 
     const app = new Elysia().use(
-      createUserRoutes({
+      createPublicProfileRoutes({
         getPublicUserProfile:
           getPublicUserProfileMock,
       }),
@@ -110,7 +110,7 @@ describe("public user profile routes", () => {
       );
 
     const app = new Elysia().use(
-      createUserRoutes({
+      createPublicProfileRoutes({
         getPublicUserProfile:
           getPublicUserProfileMock,
       }),
@@ -136,7 +136,7 @@ describe("public user profile routes", () => {
       );
 
     const app = new Elysia().use(
-      createUserRoutes({
+      createPublicProfileRoutes({
         getPublicUserProfile:
           getPublicUserProfileMock,
       }),
@@ -176,7 +176,7 @@ describe("public user profile routes", () => {
       );
 
     const app = new Elysia().use(
-      createUserRoutes({
+      createPublicProfileRoutes({
         getPublicUserProfile:
           getPublicUserProfileMock,
       }),
@@ -207,7 +207,7 @@ describe("public user profile routes", () => {
       );
 
     const app = new Elysia().use(
-      createUserRoutes({
+      createPublicProfileRoutes({
         getPublicUserProfile:
           getPublicUserProfileMock,
       }),

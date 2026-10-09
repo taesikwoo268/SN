@@ -27,7 +27,7 @@ describe("CORS", () => {
         {
           headers: {
             origin:
-              "http://localhost:3100",
+              "http://localhost:3000",
           },
         },
       ),
@@ -39,7 +39,7 @@ describe("CORS", () => {
       response.headers.get(
         "access-control-allow-origin",
       ),
-    ).toBe("http://localhost:3100");
+    ).toBe("http://localhost:3000");
 
     expect(
       response.headers.get(

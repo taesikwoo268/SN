@@ -1,6 +1,6 @@
 import type { Cookie } from "elysia";
 
-import { env } from "../../config/env.ts";
+import { env } from "../../../config/env.ts";
 
 export const SESSION_COOKIE_NAME = "session";
 
@@ -27,9 +27,7 @@ export function setSessionCookie(
   });
 }
 
-export function clearSessionCookie(
-  sessionCookie: Cookie<unknown>,
-): void {
+export function clearSessionCookie(sessionCookie: Cookie<unknown>): void {
   sessionCookie.set({
     value: "",
     ...getSharedCookieOptions(),

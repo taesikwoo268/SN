@@ -2,13 +2,13 @@ import { describe, expect, it, mock } from "bun:test";
 import { Elysia } from "elysia";
 import { z } from "zod";
 
-import { RegistrationConflictError } from "../../src/modules/auth/auth.errors.ts";
+import { RegistrationConflictError } from "../../src/modules/auth/register/register.errors.ts";
 import { createAuthRoutes } from "../../src/modules/auth/auth.routes.ts";
 import {
   RegisterResponseSchema,
   type RegisterData,
-} from "../../src/modules/auth/auth.schema.ts";
-import type { registerUser } from "../../src/modules/auth/auth.service.ts";
+} from "../../src/modules/auth/register/register.schema.ts";
+import type { registerUser } from "../../src/modules/auth/register/register.service.ts";
 
 const ApiErrorResponseSchema = z.object({
   error: z.object({
